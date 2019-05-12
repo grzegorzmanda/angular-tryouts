@@ -5,14 +5,23 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 })
 export class RangeDirective {
 
-  _range: number[];
+  _range: number[] = [];
 
   @Input()
-  set atRange(value) {
-    console.log(`[RangeDirective]`, value);
+  set atRange(range: [number, number]) {
+    this.createRange(range[0], range[1]);
+    this._range.forEach(no => {
+      this.vcr.createEmbeddedView(this.tpl, { $implicit: no });
+    });
   }
 
   constructor(private tpl: TemplateRef<any>, private vcr: ViewContainerRef) {
+  }
+
+  private createRange(from: number, to: number) {
+    for (let i = from; i <= to; i++) {
+      this._range.push(i);
+    }
   }
 
 }
